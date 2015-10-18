@@ -1,6 +1,6 @@
 # node-cbt #
 
-[CrossBrowserTesting.com](http://www.crossbrowsertesting.com/) utilities for node.js projects.
+[CrossBrowserTesting.com](http://www.crossbrowsertesting.com/) utilities for node.js projects.  Utilities include a Tunnel wrapper and a Karma configuration helper.
 
 ## Usage ##
 
@@ -15,7 +15,7 @@ Update ```package.json``` to include the following dependencies:
 The ```karma-webdriverio-launcher``` dependency is declared as a peerDependency in ```node-cbt```; since strict peer dependencies will be deprecated in npm 3, it's necessary to explicitly add this dependency to projects that require karma integration.
 
 ### Starting a CBT tunnel ###
-
+In order to use the CBT tunnel, java 7+ needs to be available on the path.
 ```
 var Tunnel = require('node-cbt').Tunnel,
     tunnel = new Tunnel({apiKey: 'u35d333dhfhapp'}).runTunnel().then(function(tunnelProc){
