@@ -1,0 +1,35 @@
+{
+  "name": "node-cbt",
+  "description": "CrossBrowserTesting.com utilities for node.js projects.",
+  "version": "1.0.0",
+  "license": "PulsePoint",
+  "keywords": [
+    "selenium",
+    "webdriver",
+    "cbt",
+    "testing",
+    "cross browser testing",
+    "crossbrowsertesting.com"
+  ],
+  "author": {
+    "name": "Eugene Rachitskiy",
+    "email": "erachitskiy@pulsepoint.com"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "q": "1.4.1",
+    "gulp-util": "3.0.6",
+    "underscore": "1.8.3"
+  },
+  "devDependencies": {
+    "mocha": "2.3.3",
+    "chai": "2.1.0",
+    "jshint": "2.8.0",
+    "portfinder": "0.4.0",
+    "del": "2.0.2"
+  },
+  "scripts": {
+    "jshint": "jshint *.js",
+    "test": "mocha test.js"
+  }
+}
