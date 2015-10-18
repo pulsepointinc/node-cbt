@@ -4,6 +4,16 @@
 
 ## Usage ##
 
+### Installing ###
+Update ```package.json``` to include the following dependencies:
+
+```
+    "karma-webdriverio-launcher": "git://github.com/tatablack/karma-webdriverjs-launcher.git",
+    "cbt-util": "git+ssh://git@github.com:pulsepointinc/node-cbt.git#1.0.1",
+```
+
+The ```karma-webdriverio-launcher``` dependency is declared as a peerDependency in ```node-cbt```; since strict peer dependencies will be deprecated in npm 3, it's necessary to explicitly add this dependency to projects that require karma integration.
+
 ### Starting a CBT tunnel ###
 
 ```
