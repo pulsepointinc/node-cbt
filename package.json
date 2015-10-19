@@ -26,9 +26,11 @@
     "chai": "2.1.0",
     "jshint": "2.8.0",
     "portfinder": "0.4.0",
-    "del": "2.0.2"
+    "del": "2.0.2",
+    "karma": "0.13.9"
   },
   "peerDependencies": {
+    "karma": "0.13.9",
     "karma-webdriverio-launcher": "git://github.com/tatablack/karma-webdriverjs-launcher.git"
   },
   "scripts": {

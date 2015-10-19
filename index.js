@@ -4,7 +4,8 @@ var q = require('q'),
     http = require('http'),
     spawn = require('child_process').spawn,
     gutil = require('gulp-util'),
-    us = require('underscore');
+    us = require('underscore'),
+    karma = require('karma');
 /**
  * An internal static utility object
  */
@@ -321,6 +322,26 @@ KarmaUtil = {
     updateKarmaConfig: function updateKarmaConfig(options){
         /* overwrite hostname to 'local' for karma to point at the right place */
         options.hostname = 'local';
+        /* generate a test id if necessary */
+        if(!options.cbtTestId){
+            options.cbtTestId = Math.ceil(Math.random()*10000);
+        }
+        /* try to generate project name and version if not provided */
+        if(!options.cbtProjectName){
+            try{
+                options.cbtProjectName = require(process.cwd()+'/package.json').name;
+            }catch(ignore){
+
+            }
+        }
+        if(!options.cbtProjectVersion){
+            try{
+                options.cbtProjectVersion = require(process.cwd()+'/package.json').version;
+            }catch(ignore){
+
+            }
+        }
+        /* add custom launchers */
         if(options.customLaunchers === undefined || options.customLaunchers === null){
             options.customLaunchers = {};
         }
