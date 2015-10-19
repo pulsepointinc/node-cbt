@@ -24,7 +24,7 @@ var Tunnel = require('node-cbt').Tunnel,
     });
 ```
 ### Configuring Karma tests ###
-A ```KarmaUtil`` object allows one to spawn a tunnel and configure a Karma server for CBT tests
+A ```KarmaUtil`` object allows one to spawn a tunnel and configure a Karma server for CBT tests:
 ```
 var cbtkarma = require('node-cbt').KarmaUtil;
 cbtkarma.runKarma({
@@ -48,6 +48,25 @@ cbtkarma.runKarma({
     cbtRecordSnapshot: 'false', // whether or not to record snapshots
 }).then(funciton(exitCode){
 ...  
+});
+```
+
+or to simply run karma using IE10 in CBT via gulp task (reading ```cbtUserName``` and ```cbtApiKey``` from env variables:
+```
+var cbtkarma = require('node-cbt').KarmaUtil;
+gulp.task('cbt-test', [], function(done) {
+    cbtkarma.runKarma({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true,
+        cbtUserName: process.env.CBT_USERNAME,
+        cbtApiKey: process.env.CBT_API_KEY,
+        cbt: true,
+        browsers: ['ie-10-win-8']
+    }).then(function(){
+        done();
+    }).catch(function(exitCode){
+        done(new Error('Karma server exited with code: ' + exitCode));
+    });
 });
 ```
 
