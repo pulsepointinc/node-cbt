@@ -1,6 +1,6 @@
 var assert = require('chai').assert,
     Tunnel = require('./index.js').Tunnel,
-    KarmaConfigGenerator = require('./index.js').KarmaConfigGenerator,
+    KarmaUtil = require('./index.js').KarmaUtil,
     http = require('http'),
     fs = require('fs'),
     portfinder = require('portfinder'),
@@ -39,16 +39,13 @@ describe('Tunnel tests', function(){
     });
 });
 
-describe('KarmaConfigGenerator tests', function(){
+describe('KarmaUtil tests', function(){
     it('updates karma config', function(){
-        var karmaOptions = {};
-        new KarmaConfigGenerator({
-            userName: 'exchangeteam@pulsepoint.com',
-            apiKey: '...',
-            projectName: 'test-project',
-            projectVersion: '0.0.1',
-            testId: '1',
-        }).updateKarmaConfig(karmaOptions);
+        var karmaOptions = KarmaUtil.updateKarmaConfig({
+            cbt: true,
+            cbtUserName: 'exchangeteam@pulsepoint.com',
+            cbtApiKey: '...'
+        });
         /* verify hostname is overwritten */
         assert.equal(karmaOptions.hostname, 'local');
         /* verify customLaunchers added */

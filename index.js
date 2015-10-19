@@ -103,14 +103,15 @@ Tunnel.prototype = {
      * @return {object} promise that resolves to a spawned cbttunnel proc
      */
     spawnTunnelProc: function(tunnelBinPath, apiKey){
+        var me = this;
         return new q.Promise(function(resolve,reject){
             Util.log('Spawning cbttunnel process...');
-            var cbtProc = spawn('java', ['-jar',tunnelBinPath,'-authkey',apiKey], { stdio: 'pipe' });
+            me.cbtProc = spawn('java', ['-jar',tunnelBinPath,'-authkey',apiKey], { stdio: 'pipe' });
             /* register killer on process exit */
             process.on('exit', function(){
-                cbtProc.kill();
+                me.close();
             });
-            resolve(cbtProc);
+            resolve(me.cbtProc);
         });
     },
     /**
@@ -166,6 +167,14 @@ Tunnel.prototype = {
                 .then(function(tunnelProc){
                     return this.awaitTunnelStartup(tunnelProc, this.config.tunnelStartupTimeout);
                 }.bind(this));
+    },
+    /**
+     * Close tunnel, killing off spawned process
+     */
+    close: function(){
+        if(this.cbtProc){
+            this.cbtProc.kill();
+        }
     }
 };
 
@@ -209,7 +218,7 @@ var PopularBrowsers = {
         browser_api_name: 'FF38',
         os_api_name: 'WinVista-C2'
     },
-    /* ie11 win 8.1 */
+    /* ie11 win 8.1 [warning: wonky selenium driver as of 10/2015] */
     'ie-11-win-8.1': {
         browserName: 'internet explorer',
         browser_api_name: 'IE11',
@@ -262,66 +271,138 @@ var PopularBrowsers = {
 };
 
 /**
- * A CBT configuration generator for karma options
- * @param {object} config -  configuration parameters that include userName, apiKey, testId, projectName, and projectVersion
- * @constructor
+ * Karma CBT utitlies; can be used to create a CBT + webdriver karma configuration with all popular browsers,
+ * start a Tunnel and run Karma tests over CBT.  Example usage:
+ * <pre><code>
+ * var cbtkarma = require('node-cbt').KarmaUtil;
+ * cbtkarma.runKarma({
+ *       //general karma options
+ *      configFile: __dirname + '/karma.conf.js',
+ *      singleRun: true,   
+ *      //required parameters
+ *      cbtUsername: cbtUserName, // required CBT username
+ *      cbtApiKey: cbtApiKey, // required CBT API key
+ *      cbt: true, // whether or not to run over CBT 
+ *      //optional parameters
+ *      cbtHubURL: 'hub.crossbrowsertesting.com', // CBT selenium hub url
+ *      cbtHubPort: 80, // CBT selenium hub port
+ *      cbtLogLevel: 'silent', // selenium driver log level - verbose | silent | command | data | result
+ *      cbtProjectName: require('./package.json').name, // optional project name to name tests
+ *      cbtProjectVersion: require('./package.json').version // optional project version to name tests
+ *      cbtTestId: Math.floor(Math.random()*10000), // optional test id to name/group tests
+ *      cbtScreenResolution: '1024x768', // desired screen resolution
+ *      cbtRecordVideo: 'false', // whether or not to record video
+ *      cbtRecordNetwork: 'false', // whether or not to record network
+ *      cbtRecordSnapshot: 'false', // whether or not to record snapshots
+ * }).then(funciton(exitCode){
+ *   ...  
+ * });
+ * </code></pre>
  */
-var KarmaConfigGenerator = function KarmaConfigGenerator(config){
-    this.config = us.extend({
-        cbtHubURL: 'hub.crossbrowsertesting.com',
-        cbtHubPort: 80,
-        screenResolution: '1024x768',
-        recordVideo: false,
-        recordNetwork: false,
-        recordSnapshot: false,
-        projectName: '',
-        projectVersion: '1.0.0',
-        testId: Math.floor(Math.random() * 10000)
-    },config);
-    this.baseCustomLauncher = {
-        base: 'WebdriverIO',
-        config: {
-            host: this.config.cbtHubURL,
-            port: this.config.cbtHubPort,
-            logLevel: 'result', /* verbose | silent | command | data | result */
-            desiredCapabilities: {
-                name : this.config.projectName + ' Karma Tests',
-                build :  this.config.projectVersion + ' - [' + this.config.testId + ']',
-                screen_resolution : '1024x768',
-                record_video : "false",
-                record_network : "false",
-                record_snapshot :  "false",
-                username : this.config.userName,
-                password : this.config.apiKey
-            }
-        }
-    };
-};
-KarmaConfigGenerator.prototype = {
+KarmaUtil = {
     /**
-     * Make a Karma Custom Launcher configuration given a capabilities object
-     * @params {object} caps - cbt-compatible selenium capabilities array
+     * Given karma server options, update them to include custom launchers and return updated configuration
+     * @param {object}  options - standard karma server options plus some CBT specific keys
+     * @param {string}  options.cbtUsername - mandatory CBT username
+     * @param {string}  options.cbtApiKey - mandatory CBT API key
+     * @param {boolean} options.cbt - flag to specify whether or not to run karma via CBT
+     * @param {string)  options.cbtHubURL - optional CBT selenium hub host name (defaults to 'hub.crossbrowsertesting.com')
+     * @param {number}  options.cbtHubPort - optional CBT selenium hub port (defaults to 80)
+     * @param {string}  options.cbtLogLevel - optional selenium log level, one of 'verbose', 'silent', 'command', 'data', or 'result' (defaulst to 'silent')
+     * @param {string}  options.cbtProjectName - optional project name - used to name/group tests
+     * @param {string}  options.cbtProjectVersion - optional project version - used to name/group tests
+     * @param {string}  options.cbtTestId - optional test id - used to name/group tests
+     * @param {string}  options.cbtScreenResolution - optional default screen resolution for all browsers (defaults to '1024x768')
+     * @param {string}  options.cbtRecordVideo - optional boolean string to flag whether or not to record videos of test runs - defaults to 'false'
+     * @param {string}  options.cbtRecordNetwork - optional boolean string to flag whether or not to record network during test runs - defaults to 'false'
+     * @param {string}  options.cbtRecordSnapshot - optional boolean string to flag whether or not to record snapshots during test runs - defaults to 'false'
+     * @return {object} options - mutated optiosn that include custom launchers and all necessary configuration to run tests via CBT
      */
-    getCustomLauncher: function(caps){
-        /* ugh; ugly deep clone hack */
-        var ret = JSON.parse(JSON.stringify(this.baseCustomLauncher));
-        us.extend(ret.config.desiredCapabilities, caps);
-        return ret;
+    updateKarmaConfig: function updateKarmaConfig(options){
+        /* overwrite hostname to 'local' for karma to point at the right place */
+        options.hostname = 'local';
+        if(options.customLaunchers === undefined || options.customLaunchers === null){
+            options.customLaunchers = {};
+        }
+        us.keys(PopularBrowsers).forEach(function(launcherName){
+            options.customLaunchers[launcherName] = {
+                base: 'WebdriverIO',
+                config: {
+                    host: options.cbtHubURL || 'hub.crossbrowsertesting.com',
+                    port: options.cbtHubPort || 80,
+                    logLevel: options.cbtLogLevel || 'silent', /* verbose | silent | command | data | result */
+                    desiredCapabilities: {
+                        name : options.cbtProjectName + ' Karma Tests',
+                        build :  options.cbtProjectVersion + ' - [' + options.cbtTestId + ']',
+                        screen_resolution : options.cbtScreenResolution || '1024x768',
+                        record_video : options.cbtRecordVideo || "false",
+                        record_network : options.cbtRecordNetwork || "false",
+                        record_snapshot :  options.cbtRecordSnapshot || "false",
+                        username : options.cbtUserName,
+                        password : options.cbtApiKey
+                    }
+                }
+            };
+            /* extend basic launcher with browser-specific config */
+            us.extend(options.customLaunchers[launcherName].config.desiredCapabilities,
+                PopularBrowsers[launcherName]);
+        });
+        return options;
     },
     /**
-     * Update Karma options with CBT launchers
+     * Start a Karma server and return a promise that both resolves and rejects to exit code
+     * exit codes of <code>0</code> will always resolve; all other exit codes will reject.
+     * @return {object} promise that resolves to karma server exit code
      */
-    updateKarmaConfig: function(karmaOptions){
-        /* hard code hostname to 'local' for karma tests to work */
-        karmaOptions.hostname = 'local';
-        karmaOptions.customLaunchers = {};
-        us.keys(PopularBrowsers).forEach(function(launcherName){
-            karmaOptions.customLaunchers[launcherName] = this.getCustomLauncher(PopularBrowsers[launcherName]);
-        }.bind(this));
+    karmaPromise: function karmaPromise(options){
+        return new q.Promise(function(resolve,reject){
+            new karma.Server(options,function(exitCode){
+                if(exitCode!==0){
+                    reject(exitCode);
+                }else{
+                    resolve(exitCode);
+                }
+            }).start();
+        });
+    },
+    /**
+     * Start a Karma server and return a promise that both resolves and rejects to exit code.
+     * If options object contains a "cbt" option, a CBT tunnel will be started.
+     * @param {object}  options - standard karma server options plus some CBT specific keys
+     * @param {string}  options.cbtUsername - mandatory CBT username
+     * @param {string}  options.cbtApiKey - mandatory CBT API key
+     * @param {boolean} options.cbt - flag to specify whether or not to run karma via CBT
+     * @param {string)  options.cbtHubURL - optional CBT selenium hub host name (defaults to 'hub.crossbrowsertesting.com')
+     * @param {number}  options.cbtHubPort - optional CBT selenium hub port (defaults to 80)
+     * @param {string}  options.cbtLogLevel - optional selenium log level, one of 'verbose', 'silent', 'command', 'data', or 'result' (defaulst to 'silent')
+     * @param {string}  options.cbtProjectName - optional project name - used to name/group tests
+     * @param {string}  options.cbtProjectVersion - optional project version - used to name/group tests
+     * @param {string}  options.cbtTestId - optional test id - used to name/group tests
+     * @param {string}  options.cbtScreenResolution - optional default screen resolution for all browsers (defaults to '1024x768')
+     * @param {string}  options.cbtRecordVideo - optional boolean string to flag whether or not to record videos of test runs - defaults to 'false'
+     * @param {string}  options.cbtRecordNetwork - optional boolean string to flag whether or not to record network during test runs - defaults to 'false'
+     * @param {string}  options.cbtRecordSnapshot - optional boolean string to flag whether or not to record snapshots during test runs - defaults to 'false'
+     * @return {object} promise that resolves to karma server exit code
+     */
+    runKarma: function runKarma(options){
+        if(options.cbt){
+            if(!options.cbtUserName || !options.cbtApiKey){
+               throw new Error('cbtUserName and cbtApiKey need to be set');
+            }
+            return new Tunnel({apiKey: options.cbtApiKey}).runTunnel().then(function(tunnelProc){
+                return KarmaUtil.karmaPromise(KarmaUtil.updateKarmaConfig(options)).then(function(exitCode){
+                    tunnelProc.kill();
+                }).catch(function(exitCode){
+                    tunnelProc.kill();
+                });
+            });
+        }else{
+            return KarmaUtil.karmaPromise(options);
+        }
     }
 };
 module.exports = {
     Tunnel: Tunnel,
     PopularBrowsers: PopularBrowsers,
-    KarmaConfigGenerator: KarmaConfigGenerator
+    KarmaUtil: KarmaUtil
 };

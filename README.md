@@ -9,7 +9,7 @@ Update ```package.json``` to include the following dependencies:
 
 ```
     "karma-webdriverio-launcher": "git://github.com/tatablack/karma-webdriverjs-launcher.git",
-    "cbt-util": "git+ssh://git@github.com:pulsepointinc/node-cbt.git#1.0.1",
+    "cbt-util": "git+ssh://git@github.com:pulsepointinc/node-cbt.git#1.0.2",
 ```
 
 The ```karma-webdriverio-launcher``` dependency is declared as a peerDependency in ```node-cbt```; since strict peer dependencies will be deprecated in npm 3, it's necessary to explicitly add this dependency to projects that require karma integration.
@@ -24,24 +24,30 @@ var Tunnel = require('node-cbt').Tunnel,
     });
 ```
 ### Configuring Karma tests ###
+A ```KarmaUtil`` object allows one to spawn a tunnel and configure a Karma server for CBT tests
 ```
-var KarmaConfigGenerator = require('node-cbt').KarmaConfigGenerator,
-    karmaOptions = {
-        configFile: 'karma.conf.js',
-        singleRun: true
-    };
-new KarmaConfigGenerator({
-    userName: 'exchangeteam@pulsepoint.com',
-    apiKey: 'ue2434ge3kd',
-    projectName: require('./package.json').name,
-    projectVersion: require('./package.json').version,
-    testId: Math.ceil(Math.ceil(new Date().getTime() + Math.random() * 100000) % 10000),
-}).updateKarmaConfig(karmaOptions);
-/* set a CBT browser to use */
-karmaOptions.browsers = ['chrome-45-win-7-x64'];
-...
-new karma.Server(karmaOptions, function(exitCode){
-    ...
+var cbtkarma = require('node-cbt').KarmaUtil;
+cbtkarma.runKarma({
+    /* general karma options */
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true,   
+    /* required CBT parameters */
+    cbtUsername: cbtUserName, // required CBT username
+    cbtApiKey: cbtApiKey, // required CBT API key
+    cbt: true, // whether or not to run over CBT 
+    /* optional CBT parameters */
+    cbtHubURL: 'hub.crossbrowsertesting.com', // CBT selenium hub url
+    cbtHubPort: 80, // CBT selenium hub port
+    cbtLogLevel: 'silent', // selenium driver log level - verbose | silent | command | data | result
+    cbtProjectName: require('./package.json').name, // optional project name to name tests
+    cbtProjectVersion: require('./package.json').version // optional project version to name tests
+    cbtTestId: Math.floor(Math.random()*10000), // optional test id to name/group tests
+    cbtScreenResolution: '1024x768', // desired screen resolution
+    cbtRecordVideo: 'false', // whether or not to record video
+    cbtRecordNetwork: 'false', // whether or not to record network
+    cbtRecordSnapshot: 'false', // whether or not to record snapshots
+}).then(funciton(exitCode){
+...  
 });
 ```
 
