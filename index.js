@@ -127,8 +127,8 @@ Tunnel.prototype = {
             var failTimeout = setTimeout(function(){
                 if(tunnelProc !== null && tunnelProc !== undefined){
                     tunnelProc.kill();
-                    reject('Timed out waiting for tunnel to connect after '+connectTimeout+'ms');
                 }
+                reject('Timed out waiting for tunnel to connect after '+connectTimeout+'ms');
             }, connectTimeout);
             /* read process stdout stream */
             tunnelProc.stdout.on('data', function(dataBuffer){
