@@ -8,7 +8,8 @@
 Update ```package.json``` to include the following dependencies:
 
 ```
-    "karma-webdriverio-launcher": "git://github.com/tatablack/karma-webdriverjs-launcher.git",
+    "karma": "0.13.9",
+    "karma-webdriverio-launcher": "git://github.com/ProfessorEugene/karma-webdriverio-launcher.git#0.1.0",
     "node-cbt": "git+ssh://git@github.com:pulsepointinc/node-cbt.git#1.0.2",
 ```
 

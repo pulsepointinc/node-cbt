@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "karma": "0.13.9",
-    "karma-webdriverio-launcher": "git://github.com/tatablack/karma-webdriverjs-launcher.git"
+    "karma-webdriverio-launcher": "git://github.com/ProfessorEugene/karma-webdriverio-launcher.git#0.1.0"
   },
   "scripts": {
     "jshint": "jshint *.js",
