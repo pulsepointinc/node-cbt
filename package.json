@@ -2,7 +2,7 @@
   "name": "node-cbt",
   "description": "CrossBrowserTesting.com utilities for node.js projects.",
   "version": "1.0.0",
-  "license": "PulsePoint",
+  "license": "GPL-3.0",
   "keywords": [
     "selenium",
     "webdriver",
@@ -36,5 +36,9 @@
   "scripts": {
     "jshint": "jshint *.js",
     "test": "mocha test.js"
+  },
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/pulsepointinc/node-cbt.git"
   }
 }
