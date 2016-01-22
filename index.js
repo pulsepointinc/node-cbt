@@ -2,6 +2,7 @@ var q = require('q'),
     fs = require('fs'),
     path = require('path'),
     http = require('http'),
+    https = require('https'),
     spawn = require('child_process').spawn,
     gutil = require('gulp-util'),
     us = require('underscore'),
@@ -42,6 +43,7 @@ var Util = {
      download: function(url,path){
         return new q.Promise(function(resolve,reject){
             var fileStream = fs.createWriteStream(path);
+            var client = (url.indexOf('https://')===0?https:http);
             http.get(url, function(response) {
                 response.pipe(fileStream);
                 fileStream.on('finish',function(){
