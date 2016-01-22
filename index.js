@@ -103,6 +103,10 @@ Tunnel.prototype = {
     spawnTunnelProc: function(tunnelBinPath, apiKey){
         var me = this;
         return new q.Promise(function(resolve,reject){
+            if(!apiKey){
+                reject('An API key must be provided');
+                return;
+            }
             Util.log('Spawning cbttunnel process...');
             me.cbtProc = spawn('java', ['-jar',tunnelBinPath,'-authkey',apiKey], { stdio: 'pipe' });
             /* register killer on process exit */
