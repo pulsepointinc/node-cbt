@@ -10,7 +10,7 @@ Update ```package.json``` to include the following dependencies:
 ```
     "karma": "~0.13",
     "karma-webdriverio-launcher": "git://github.com/ProfessorEugene/karma-webdriverio-launcher.git#0.1.1",
-    "node-cbt": "git+ssh://git@github.com:pulsepointinc/node-cbt.git#1.0.4",
+    "node-cbt": "git+ssh://git@github.com:pulsepointinc/node-cbt.git#1.0.5",
 ```
 
 The ```karma-webdriverio-launcher``` dependency is declared as a peerDependency in ```node-cbt```; since strict peer dependencies will be deprecated in npm 3, it's necessary to explicitly add this dependency to projects that require karma integration.
