@@ -26,7 +26,10 @@ describe('Tunnel tests', function(){
         del(['./bin']).then(function(){
             portfinder.getPort(function(err,port){
                 server = http.createServer(function(req,res){
-                    fs.createReadStream('./mocktunnel.jar').pipe(res);
+                    /* create an artificial one second timeout to simulate a slow server and verify promises work*/
+                    setTimeout(function(){
+                        fs.createReadStream('./mocktunnel.jar').pipe(res);
+                    },1000);
                 }.bind(this));
                 server.listen(port,'127.0.0.1',undefined, done);
             });
