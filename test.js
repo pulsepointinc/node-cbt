@@ -28,7 +28,7 @@ describe('Tunnel tests', function(){
                 server = http.createServer(function(req,res){
                     fs.createReadStream('./mocktunnel.jar').pipe(res);
                 }.bind(this));
-                server.listen(port, done);
+                server.listen(port,'127.0.0.1',undefined, done);
             });
         });
     });
