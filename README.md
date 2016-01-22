@@ -72,9 +72,10 @@ gulp.task('cbt-test', [], function(done) {
 ```
 
 ## Building ##
-* ```npm install```
-* ```npm run jshint```
-* ```npm run test```
+* ```npm install``` - installs npm modules
+* ```npm run jshint``` - runs jshint
+* ```npm run test``` - runs tests
+* ```npm run release``` - performs a release
 
 ## Releasing ##
 * Update package.json
