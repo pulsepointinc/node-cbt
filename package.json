@@ -1,7 +1,7 @@
 {
   "name": "node-cbt",
   "description": "CrossBrowserTesting.com utilities for node.js projects.",
-  "version": "1.0.4",
+  "version": "1.0.5-SNAPSHOT",
   "license": "GPL-3.0",
   "keywords": [
     "selenium",
@@ -27,7 +27,8 @@
     "chai": "2.1.0",
     "jshint": "2.8.0",
     "portfinder": "0.4.0",
-    "del": "2.0.2"
+    "del": "2.0.2",
+    "node-release": "git+ssh://git@github.com:pulsepointinc/node-release.git#1.0.1"
   },
   "peerDependencies": {
     "karma": "~0.13",
@@ -35,7 +36,8 @@
   },
   "scripts": {
     "jshint": "jshint *.js",
-    "test": "mocha test.js"
+    "test": "mocha test.js",
+    "release": "node node_modules/node-release/Release.js"
   },
   "repository":{
     "type": "git",
