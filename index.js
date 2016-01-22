@@ -72,7 +72,7 @@ var Util = {
 var Tunnel = function(config){
     this.config = us.extend({
         tunnelBinPath: './bin/cbttunnel.jar',
-        tunnelBinURL: 'http://crossbrowsertesting.com/cbttunnel.jar',
+        tunnelBinURL: 'https://crossbrowsertesting.com/cbttunnel.jar',
         tunnelStartupTimeout: 1000 * 60 * 2,
     },config);
 };
