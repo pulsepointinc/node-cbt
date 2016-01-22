@@ -37,7 +37,7 @@
   "scripts": {
     "jshint": "jshint *.js",
     "test": "mocha test.js",
-    "release": "node node_modules/node-release/Release.js"
+    "release": "node node_modules/node-release/Release.js -p `pwd` --build 'npm run test'"
   },
   "repository":{
     "type": "git",
