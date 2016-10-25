@@ -271,13 +271,6 @@ var PopularBrowsers = {
         os_api_name: 'iPhone6-iOS8sim',
         screen_resolution : '750x1334'
     },
-    /* mob chrome 35 galaxy s5 phone android 4.4 */
-    'chrome-mob-35-android-galaxys5-android-4.4': {
-        browserName: 'chrome',
-        browser_api_name: 'MblChrome35',
-        os_api_name: 'GalaxyS5-And44',
-        screen_resolution : '1080x1920'
-    },
     /* edge 20 browser windows 10 */
     'edge-20-windows-10': {
         browserName: 'internet explorer',
