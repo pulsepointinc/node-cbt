@@ -220,11 +220,11 @@ var PopularBrowsers = {
         browser_api_name: 'FF38',
         os_api_name: 'WinVista-C2'
     },
-    /* ie11 win 8.1 [warning: wonky selenium driver as of 10/2015] */
-    'ie-11-win-8.1': {
+    /* ie11 win 7 */
+    'ie-11-win-7-x64': {
         browserName: 'internet explorer',
         browser_api_name: 'IE11',
-        os_api_name: 'Win8.1'
+        os_api_name: 'Win7x64-Base'
     },
     /* ie10  win 8 */
     'ie-10-win-8': {
@@ -250,18 +250,18 @@ var PopularBrowsers = {
         browser_api_name: 'Safari8',
         os_api_name: 'Mac10.10'
     },
-    /* chrome mob 38 Android galaxy tab 2 / android 4.1*/
-    'chrome-mob-38-android-galaxy-tab-2-4.1': {
+    /* chrome mob 38 Android nexus tab 7 / android 4.2*/
+    'chrome-mob-38-android-nexus-tab-2-4.2': {
         browserName: 'chrome',
-        browser_api_name: 'MblChrome38',
-        os_api_name: 'GalaxyTab2-And41',
+        browser_api_name: 'MblChrome37',
+        os_api_name: 'Nexus7-And42',
         screen_resolution: '1280x800'
     },
-    /* mob safari 8.0 ipad air ios 8.1 */
-    'safari-mob-8.0-ipad-air-ios-8.1': {
+    /* mob safari 9.0 ipad air2 ios 9.3 */
+    'safari-mob-8.0-ipad-air2-ios-9.3': {
         browserName: 'safari',
-        browser_api_name: 'MblSafari8.0',
-        os_api_name: 'iPadAir-iOS8Sim'
+        browser_api_name: 'MblSafari9.0',
+        os_api_name: 'iPadAir2-iOS9Sim'
     },
     /* mob safari 8.0 iphone 6 ios 8.1 */
     'safari-mob-8.0-iphone-6-ios-8.1': {
@@ -269,6 +269,18 @@ var PopularBrowsers = {
         browser_api_name: 'MblSafari8.0',
         os_api_name: 'iPhone6-iOS8sim',
         screen_resolution : '750x1334'
+    },
+    /* mob chrome 35 galaxy s5 phone android 4.4 */
+    'chrome-mob-35-android-galaxys5-android-4.4': {
+        browserName: 'chrome',
+        browser_api_name: 'MblChrome35',
+        os_api_name: 'GalaxyS5-And44'
+    },
+    /* edge 20 browser windows 10 */
+    'edge-20-windows-10': {
+        browserName: 'internet explorer',
+        browser_api_name: 'Edge20',
+        os_api_name: 'Win10'
     }
 };
 
