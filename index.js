@@ -261,7 +261,8 @@ var PopularBrowsers = {
     'safari-mob-8.0-ipad-air2-ios-9.3': {
         browserName: 'safari',
         browser_api_name: 'MblSafari9.0',
-        os_api_name: 'iPadAir2-iOS9Sim'
+        os_api_name: 'iPadAir2-iOS9Sim',
+        screen_resolution: '2048x1536'
     },
     /* mob safari 8.0 iphone 6 ios 8.1 */
     'safari-mob-8.0-iphone-6-ios-8.1': {
@@ -274,7 +275,8 @@ var PopularBrowsers = {
     'chrome-mob-35-android-galaxys5-android-4.4': {
         browserName: 'chrome',
         browser_api_name: 'MblChrome35',
-        os_api_name: 'GalaxyS5-And44'
+        os_api_name: 'GalaxyS5-And44',
+        screen_resolution : '1080x1920'
     },
     /* edge 20 browser windows 10 */
     'edge-20-windows-10': {
