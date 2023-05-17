@@ -1,7 +1,7 @@
 {
   "name": "node-cbt",
   "description": "CrossBrowserTesting.com utilities for node.js projects.",
-  "version": "1.0.10",
+  "version": "1.0.11-SNAPSHOT",
   "license": "GPL-3.0",
   "keywords": [
     "selenium",
