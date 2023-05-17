@@ -20,7 +20,7 @@
     "q": "1.4.1",
     "gulp-util": "3.0.6",
     "underscore": "1.8.3",
-    "karma-webdriverio-launcher": "git://github.com/ProfessorEugene/karma-webdriverio-launcher.git#0.1.1",
+    "karma-webdriverio-launcher": "https://github.com/ProfessorEugene/karma-webdriverio-launcher/tarball/0.1.1#0.1.1",
     "request": "2.67.0"
   },
   "devDependencies": {
@@ -29,7 +29,8 @@
     "jshint": "2.8.0",
     "portfinder": "0.4.0",
     "del": "2.0.2",
-    "node-release": "git+ssh://git@github.com:pulsepointinc/node-release.git#1.0.1"
+    "karma": "0.x",
+    "node-release": "https://github.com/pulsepointinc/node-release/tarball/1.0.1#1.0.1"
   },
   "peerDependencies": {
     "karma": "~0.13",
